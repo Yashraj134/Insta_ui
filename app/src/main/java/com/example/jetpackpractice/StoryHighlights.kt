@@ -1,4 +1,4 @@
-package com.example.jetpackpractice.ui.theme
+package com.example.jetpackpractice
 
 import androidx.compose.ui.graphics.painter.Painter
 

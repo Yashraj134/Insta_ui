@@ -1,4 +1,4 @@
-package com.example.jetpackpractice.ui.theme
+package com.example.jetpackpractice
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -51,11 +51,8 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.jetpackpractice.R
-import kotlin.collections.listOf as listOf
 
 @Composable
 fun ProfileScreen() {
@@ -71,31 +68,33 @@ fun ProfileScreen() {
 }
 
 @Composable
-fun MainContent(modifier: Modifier){
+fun MainContent(modifier: Modifier) {
     var selectedTabIndex by remember {
         mutableIntStateOf(0)
     }
-   Column(modifier.fillMaxSize()) {
-       ProfileScreen()
-       Spacer(modifier = Modifier.height(20.dp))
-       PostTabView(onTabSelected = {index ->
-             selectedTabIndex = index
-       })
-       when(selectedTabIndex){
-           0 -> PostsSection()
-       }
-   }
+    Column(modifier.fillMaxSize()) {
+        ProfileSection()
+        Spacer(modifier = Modifier.height(20.dp))
+        PostsTabView(onTabSelected = { index ->
+            selectedTabIndex = index
+        })
+        when (selectedTabIndex) {
+            0 -> PostsSection()
+        }
+    }
 }
 
 @Composable
 fun PostsSection() {
-    val posts = listOf(
-        painterResource(id = R.drawable.gdsc_logo),
-        painterResource(id = R.drawable.jetpack_camp)
+    val posts = listOf<Painter>(
+        painterResource(id = R.drawable.jepack),
+        painterResource(id = R.drawable.gdsclogo),
+       // painterResource(id = R.drawable.scrollable_column)
     )
-    LazyVerticalGrid(columns = GridCells.Fixed(3),modifier = Modifier.scale(1.01f), content = {
-        items(posts.size){
-            Image(painter = posts[it], contentDescription = "", contentScale = ContentScale.Crop,
+    LazyVerticalGrid(columns = GridCells.Fixed(3), modifier = Modifier.scale(1.01f), content = {
+        items(posts.size) {
+            Image(
+                painter = posts[it], contentDescription = "", contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .aspectRatio(1f)
                     .border(
@@ -108,29 +107,34 @@ fun PostsSection() {
 }
 
 @Composable
-fun PostTabView(
+fun PostsTabView(
     modifier: Modifier = Modifier,
     onTabSelected: (selectedIndex: Int) -> Unit
-    ) {
-        var  selectedTabIndex by remember {
+) {
+    var selectedTabIndex by remember {
         mutableIntStateOf(0)
     }
     val tabIcons = listOf(
         TabRowIcons(R.drawable.ic_grid),
-        TabRowIcons(R.drawable.ic_reel_icon),
-        TabRowIcons(R.drawable.ic_tag_icon)
+        TabRowIcons(R.drawable.insta_reel),
+        TabRowIcons(R.drawable.insta_tagged)
     )
-    TabRow(selectedTabIndex = selectedTabIndex, modifier = modifier, ) {
+    TabRow(
+        selectedTabIndex = selectedTabIndex,
+        modifier = modifier
+    ) {
         tabIcons.forEachIndexed { index, tabRowIcons ->
-            Tab(selected = index == selectedTabIndex,
+            Tab(
+                selected = index == selectedTabIndex,
                 onClick = {
                     selectedTabIndex = index
                     onTabSelected(index)
                 },
                 icon = {
-                    Icon(painter = painterResource(id = tabRowIcons.icon), contentDescription = "",
+                    Icon(
+                        painter = painterResource(id = tabRowIcons.icon), contentDescription = "",
                         modifier.size(20.dp),
-                        tint = if(selectedTabIndex == index) Color.Black else Color.Gray
+                        tint = if (selectedTabIndex == index) Color.Black else Color.Gray
                     )
                 },
                 selectedContentColor = Color.Black,
@@ -138,59 +142,59 @@ fun PostTabView(
             )
         }
     }
+
 }
 
 @Composable
-fun ProfileSection(modifier : Modifier = Modifier) {
-    Column(modifier = Modifier.fillMaxWidth()){
+fun ProfileSection(modifier: Modifier = Modifier) {
+    Column(modifier = Modifier.fillMaxWidth()) {
         Spacer(modifier = Modifier.height(6.dp))
-        Row(verticalAlignment = Alignment.CenterVertically,
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
             modifier = modifier
                 .fillMaxWidth()
                 .padding(horizontal = 20.dp)
         ) {
-           ImageBuilder(
-                  image = painterResource(id = R.drawable.profile_pic),
-                  modifier = modifier
-                      .size(100.dp)
-                      .weight(3f)
-           )
-            ProfileStatusBar(modifier = Modifier.weight(7f))//status bar beside profile pic
+            ImageBuilder(
+                image = painterResource(id = R.drawable.walchandlogo),
+                modifier = modifier
+                    .size(100.dp)
+                    .weight(3f)
+            )
+            FollowStatusBar(modifier = Modifier.weight(7f))
         }
-        Spacer(modifier = Modifier.height(8.dp))
         BioSection(
-            name = "Walchand College of Engineering ",
+            name = "WCE",
             activityLabel = "Education",
-            description = "Walchand College of Engineering (WCE : IIT Vishrambag)\nis a well-known engineering institution located in Sangli, Maharashtra.\n It was established in 1947.",
-            link = "http://www.walchandsangli.ac.in/",
+            description = "Walchand College of Engineering \nwas established in 1947 \nCollege is enriched with variety of clubs and student communities.",
+            link = "www.walchandsangli.ac.in",
             followers = buildAnnotatedString {
                 val boldStyle = SpanStyle(
                     fontWeight = FontWeight.Bold
                 )
                 append("Followed by ")
-                pushStyle(boldStyle)  //for 2 different fonts in a single line
-                append("IIT Bombay")
+                pushStyle(boldStyle)
+                append("Narendra Modi")
                 pop()
                 append(", ")
                 pushStyle(boldStyle)
-                append("Mukesh Ambani")
+                append("Donald Trump")
                 pop()
                 append(" and")
                 pushStyle(boldStyle)
                 append(" 27 others")
             }
         )
-        Spacer(modifier = Modifier.height(25.dp))
-        ButtonSection(modifier = modifier.fillMaxWidth())
-        Spacer(modifier = modifier.height(20.dp))
+        ButtonsSection(modifier = modifier.fillMaxWidth())
+        Spacer(modifier = Modifier.height(20.dp))
         HighlightSection(
             highlight = listOf(
                 StoryHighlights(
-                    image = painterResource(id = R.drawable.insta_highlight_discorde),
+                    image = painterResource(id = R.drawable.highlight_discord),
                     title = "Discord"
                 ),
                 StoryHighlights(
-                    image = painterResource(id = R.drawable.insta_highlight_youtube),
+                    image = painterResource(id = R.drawable.highlight_youtube),
                     title = "Youtube"
                 )
             )
@@ -201,11 +205,13 @@ fun ProfileSection(modifier : Modifier = Modifier) {
 
 @Composable
 fun HighlightSection(highlight: List<StoryHighlights>, modifier: Modifier = Modifier) {
-    LazyRow(modifier.padding(horizontal = 20.dp)){
-        items(highlight.size){
-            Column(horizontalAlignment = Alignment.CenterHorizontally,
+    LazyRow(modifier.padding(horizontal = 20.dp)) {
+        items(highlight.size) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
-                modifier = modifier.padding(end = 15.dp)) {
+                modifier = Modifier.padding(end = 15.dp)
+            ) {
                 ImageBuilder(image = highlight[it].image, modifier = Modifier.size(70.dp))
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(text = highlight[it].title, fontSize = 12.sp)
@@ -215,45 +221,44 @@ fun HighlightSection(highlight: List<StoryHighlights>, modifier: Modifier = Modi
 }
 
 @Composable
-fun ButtonSection(modifier: Modifier) { //between bio and content
-    val miniWidth = 100.dp
+fun ButtonsSection(modifier: Modifier) {
+    val minWidth = 105.dp
     val height = 30.dp
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = modifier.padding(horizontal = 20.dp)
-    ){
+    ) {
         SampleButton(
             modifier = Modifier
-                .defaultMinSize(miniWidth)
+                .defaultMinSize(minWidth)
                 .height(height),
             text = "Following", icon = Icons.Default.KeyboardArrowDown
         )
         SampleButton(
             modifier = Modifier
-                .defaultMinSize(miniWidth)
+                .defaultMinSize(minWidth)
                 .height(height),
             text = "Message"
         )
         SampleButton(
             modifier = Modifier
-                .defaultMinSize(miniWidth)
+                .defaultMinSize(minWidth)
                 .height(height),
             text = "Email"
         )
         SampleButton(
             modifier = Modifier
-                .size(height)
-            , icon = Icons.Default.KeyboardArrowDown
+                .size(height), icon = Icons.Default.KeyboardArrowDown
         )
     }
-
 }
 
 @Composable
 fun SampleButton(
     modifier: Modifier = Modifier,
-    text:String? = null,
-    icon  :ImageVector? = null) {
+    text: String? = null,
+    icon: ImageVector? = null
+) {
 
     Row(verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
@@ -262,13 +267,13 @@ fun SampleButton(
             .background(Color(0xFFE2E1E1))
             .clickable { }
     ) {
-        if(text != null) Text(text = text,
+        if (text != null) Text(
+            text = text,
             fontWeight = FontWeight.SemiBold,
             overflow = TextOverflow.Ellipsis
-       )
-        if(icon != null) Icon(imageVector = icon, contentDescription = "", tint = Color.Black)
+        )
+        if (icon != null) Icon(imageVector = icon, contentDescription = "", tint = Color.Black)
     }
-
 }
 
 @Composable
@@ -281,49 +286,81 @@ fun BioSection(
 ) {
     val letterSpacing = 0.5.sp
     val lineHeight = 20.sp
-    Column (modifier = Modifier
-        .fillMaxWidth()
-        .padding(20.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(20.dp)
+    ) {
 
-        Text(text = name, fontWeight = FontWeight.Bold,letterSpacing= letterSpacing,lineHeight = lineHeight )
-        Text(text = activityLabel, fontWeight = FontWeight.Medium,letterSpacing= letterSpacing,lineHeight = lineHeight, color = Color.Gray)
-        Text(text = description, fontWeight = FontWeight.Medium,letterSpacing= letterSpacing,lineHeight = lineHeight)
-        Text(text = link, fontWeight = FontWeight.Medium,letterSpacing= letterSpacing,lineHeight = lineHeight, color = Color(0xFF174A72))
-        Text(text = followers, fontWeight = FontWeight.Medium,letterSpacing= letterSpacing,lineHeight = lineHeight, fontSize = 13.sp)
+        Text(
+            text = name,
+            fontWeight = FontWeight.Bold,
+            letterSpacing = letterSpacing,
+            lineHeight = lineHeight
+        )
+        Text(
+            text = activityLabel,
+            fontWeight = FontWeight.Medium,
+            letterSpacing = letterSpacing,
+            lineHeight = lineHeight,
+            color = Color.Gray
+        )
+        Text(
+            text = description,
+            fontWeight = FontWeight.Medium,
+            letterSpacing = letterSpacing,
+            lineHeight = lineHeight
+        )
+        Text(
+            text = link,
+            fontWeight = FontWeight.Medium,
+            letterSpacing = letterSpacing,
+            lineHeight = lineHeight,
+            color = Color(0xFF174A72)
+        )
+        Text(
+            text = followers,
+            fontWeight = FontWeight.Medium,
+            letterSpacing = letterSpacing,
+            lineHeight = lineHeight,
+            fontSize = 13.sp
+        )
 
     }
 
 }
 
 @Composable
-fun ProfileStatusBar(modifier: Modifier) {
-      Row(verticalAlignment = Alignment.CenterVertically,
-          horizontalArrangement = Arrangement.SpaceAround,
-          modifier = modifier
-      ){
-          FollowSection(number = "3", label="Posts",modifier= modifier)
-          FollowSection(number = "100k", label="Followers",modifier= modifier)
-          FollowSection(number = "10", label="Following",modifier= modifier)
-      }
+fun FollowStatusBar(modifier: Modifier) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceAround,
+        modifier = modifier
+    ) {
+        FollowSection(number = "2", label = "Posts", modifier = modifier)
+        FollowSection(number = "500", label = "Followers", modifier = modifier)
+        FollowSection(number = "20", label = "Following", modifier = modifier)
+
+    }
 }
 
 @Composable
 fun FollowSection(number: String, label: String, modifier: Modifier) {
-    Column(verticalArrangement = Arrangement.Center,
+    Column(
+        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
     ) {
-       Text(text = number, fontWeight = FontWeight.Bold, fontSize = 20.sp)
-       Spacer(modifier = Modifier.height(4.dp))
-       Text(text = label, fontWeight = FontWeight.SemiBold)
+        Text(text = number, fontWeight = FontWeight.Bold, fontSize = 20.sp)
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(text = label, fontWeight = FontWeight.SemiBold)
     }
 }
 
-//for profile image and hollow border beside it
 @Composable
-fun ImageBuilder(image: Painter,modifier: Modifier) {
+fun ImageBuilder(image: Painter, modifier: Modifier) {
     Image(
-        painter =  image, contentDescription = "",
+        painter = image, contentDescription = "",
         modifier = modifier
             .aspectRatio(1f, matchHeightConstraintsFirst = true)
             .border(width = 2.dp, color = Color.LightGray, shape = CircleShape)
@@ -337,7 +374,7 @@ fun ImageBuilder(image: Painter,modifier: Modifier) {
 fun TopBar(modifier: Modifier) {
     TopAppBar(title = {
         Text(
-            text = "mkr.developer", modifier.padding(start = 20.dp, bottom = 6.dp),
+            text = "Yashraj Rane", modifier.padding(start = 20.dp, bottom = 6.dp),
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold
         )
@@ -367,5 +404,3 @@ fun TopBar(modifier: Modifier) {
         }
     )
 }
-
-
